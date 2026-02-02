@@ -1,0 +1,154 @@
+{
+  "version": "0.1.0",
+  "interventions": [
+    {
+      "id": "J_job_loss_low_01",
+      "driver": "job_loss",
+      "neuroticism_band": "low",
+      "title": "AI边界清单：3个难替代环节",
+      "goal": "把恐惧从“我会被取代”缩小到“哪些环节可被替代，哪些不易”。",
+      "time_minutes": 10,
+      "steps": [
+        "写下你工作流程中最关键的3个环节（用动词开头，例如：澄清需求、做权衡决策、对外协作）。",
+        "对每个环节标注：AI可替代程度（低/中/高）。",
+        "挑出“低可替代”的1个环节，写一句：‘这个环节的价值在于____。’"
+      ],
+      "success_criteria": "你得到一个包含3条的清单，并写出1句价值定义。",
+      "fallback_if_stuck": "如果想不出3个环节，就先写‘我每天做的3件最常见的事’。",
+      "tags": ["control", "clarity", "boundary"]
+    },
+    {
+      "id": "J_job_loss_mid_01",
+      "driver": "job_loss",
+      "neuroticism_band": "mid",
+      "title": "可控变化：把1个任务变成“AI协作版”",
+      "goal": "从宏大恐惧回到可控行动，建立“我能使用AI而不是被动被替代”。",
+      "time_minutes": 10,
+      "steps": [
+        "选一个你本周必做的小任务（写邮件/整理要点/写提纲）。",
+        "写出你自己先做的第一步（例如：列3个要点）。",
+        "让AI只做第二步（例如：把3个要点扩写成段落）。",
+        "你再做第三步：删改到你认可的版本。"
+      ],
+      "success_criteria": "你完成一次“我先做→AI辅助→我审改”的三段协作。",
+      "fallback_if_stuck": "如果任务太大，缩小到‘只处理一段文字/一个段落’。",
+      "tags": ["control", "micro-action", "collaboration"]
+    },
+    {
+      "id": "J_job_loss_high_01",
+      "driver": "job_loss",
+      "neuroticism_band": "high",
+      "title": "5分钟：把恐惧落到“今天我能控制的1件事”",
+      "goal": "先稳定情绪与控制感，不讨论未来。",
+      "time_minutes": 5,
+      "steps": [
+        "写下你此刻最强的一句话担忧（例如：‘我会被取代’）。",
+        "把它改写成可控版本：‘我现在能控制的是____。’",
+        "从可控版本里选一个最小动作（例如：今天只让AI帮我做一次总结）。"
+      ],
+      "success_criteria": "你写出1句可控改写，并选定1个最小动作。",
+      "fallback_if_stuck": "如果很难改写，就用模板：‘我无法控制未来，但我能控制今天的____。’",
+      "tags": ["grounding", "control", "low-load"]
+    },
+
+    {
+      "id": "J_value_threat_low_01",
+      "driver": "value_threat",
+      "neuroticism_band": "low",
+      "title": "价值链重构：我提供的价值=判断+责任",
+      "goal": "把“我不重要”转为可描述的价值组件。",
+      "time_minutes": 10,
+      "steps": [
+        "写下你工作中最常被需要的3种价值（例如：判断、沟通、责任承担、审美、取舍）。",
+        "对每一项写一句具体例子（发生过的场景）。",
+        "选择其中1项，写一句：‘AI可以帮我____，但这项价值仍需要我来____。’"
+      ],
+      "success_criteria": "你完成3项价值+例子，并写出1条AI协作边界句。",
+      "fallback_if_stuck": "如果想不出价值，从‘别人找我通常是为了什么？’开始写。",
+      "tags": ["identity", "value", "boundary"]
+    },
+    {
+      "id": "J_value_threat_mid_01",
+      "driver": "value_threat",
+      "neuroticism_band": "mid",
+      "title": "证据卡：我被需要过的1个具体时刻",
+      "goal": "用具体证据对抗抽象的“我会变得无用”。",
+      "time_minutes": 10,
+      "steps": [
+        "回忆一个你被需要的具体事件（越小越好）。",
+        "写下：当时的情境、你做了什么、结果是什么（各1句）。",
+        "写一句：‘这类价值在AI时代仍然重要，因为____。’"
+      ],
+      "success_criteria": "你写出一个事件三句描述+1句意义归因。",
+      "fallback_if_stuck": "想不出事件就从：‘最近一次别人向我求助是什么？’开始。",
+      "tags": ["identity", "evidence", "reframe"]
+    },
+    {
+      "id": "J_value_threat_high_01",
+      "driver": "value_threat",
+      "neuroticism_band": "high",
+      "title": "2分钟稳定句 + 3分钟微行动",
+      "goal": "先把情绪强度降下来，再做一个小动作恢复掌控感。",
+      "time_minutes": 5,
+      "steps": [
+        "读/写一句稳定句：‘我不需要一次解决未来，我只需要完成今天的一小步。’",
+        "写下你今天能做的1个最小任务（例如：把一段文字改得更清晰）。",
+        "让AI帮你做一次“更清晰/更简洁”的改写，你只做选择与删改。"
+      ],
+      "success_criteria": "你完成一次“我选择/我删改”的动作，得到一个你认可的版本。",
+      "fallback_if_stuck": "如果不想让AI改写，就让它只做‘列出3种改进方向’供你选。",
+      "tags": ["grounding", "identity", "low-load"]
+    },
+
+    {
+      "id": "J_skill_erosion_low_01",
+      "driver": "skill_erosion",
+      "neuroticism_band": "low",
+      "title": "AI使用边界协议：哪些交给AI，哪些必须自己做",
+      "goal": "把“会变笨”的担心变成可执行的使用规则。",
+      "time_minutes": 10,
+      "steps": [
+        "列出你工作中的1个核心技能（例如：写作、分析、推理、设计决策）。",
+        "写下这项技能的‘关键步骤’（至少3步）。",
+        "标注：哪些步骤可以让AI辅助，哪些步骤必须自己完成（尤其是判断/取舍）。",
+        "写出你的协议句：‘我允许AI帮我____，但我必须亲自完成____。’"
+      ],
+      "success_criteria": "你写出一条明确的‘允许/必须’协议句。",
+      "fallback_if_stuck": "如果步骤拆不出，就从‘我做这件事时最容易出错的地方’开始。",
+      "tags": ["boundary", "skills", "control"]
+    },
+    {
+      "id": "J_skill_erosion_mid_01",
+      "driver": "skill_erosion",
+      "neuroticism_band": "mid",
+      "title": "三段式协作：我先推理→AI补全→我复核",
+      "goal": "通过流程设计，避免被AI“替代思考”。",
+      "time_minutes": 10,
+      "steps": [
+        "选一个需要你推理的小问题（例如：为什么这个方案更好？）。",
+        "你先写出3条推理要点（不求完美）。",
+        "让AI把3条要点扩写成完整论证。",
+        "你最后做复核：删除1句你不同意的，补上1句你认为关键的。"
+      ],
+      "success_criteria": "你完成‘我先想→AI扩写→我复核’并产生可用文本。",
+      "fallback_if_stuck": "如果推理要点写不出，先写‘我倾向A的直觉原因’也可以。",
+      "tags": ["process", "skills", "control"]
+    },
+    {
+      "id": "J_skill_erosion_high_01",
+      "driver": "skill_erosion",
+      "neuroticism_band": "high",
+      "title": "5分钟：我仍在做决定（只让AI给选项）",
+      "goal": "降低被替代感：AI只提供选项，你做决定。",
+      "time_minutes": 5,
+      "steps": [
+        "选一个小决策点（标题怎么写/要点怎么排）。",
+        "让AI只输出3个选项（不让它直接给最终答案）。",
+        "你选1个，并写一句理由：‘我选这个，因为____。’"
+      ],
+      "success_criteria": "你完成一次‘AI给选项→我做决定→我解释理由’。",
+      "fallback_if_stuck": "如果不想写理由，就写‘我更喜欢这个风格/更符合目标’也算。",
+      "tags": ["decision", "grounding", "low-load"]
+    }
+  ]
+}
