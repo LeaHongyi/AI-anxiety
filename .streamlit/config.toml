@@ -1,0 +1,7 @@
+[server]
+headless = true
+enableCORS = false
+fileWatcherType = "poll"
+
+[browser]
+gatherUsageStats = false
