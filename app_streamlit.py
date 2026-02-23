@@ -12,7 +12,7 @@ if str(SRC) not in sys.path:
 import streamlit as st
 
 from assessment.neuroticism import score_neuroticism
-from assessment.job_anxiety import score_job_anxiety
+from assessment.ai_anxiety import score_dimension
 from interventions.loader import load_interventions
 from routing.personalize import route
 
@@ -23,7 +23,7 @@ from ai.analyzer import analyze_chat
 
 LIB_PATH = "src/interventions/library.json"
 
-st.set_page_config(page_title="AI焦虑-工作替代焦虑干预系统", layout="centered")
+st.set_page_config(page_title="AI焦虑多维度干预系统", layout="centered")
 
 # Load optional local env; real LLM config must come from environment variables.
 load_dotenv()
@@ -220,7 +220,7 @@ step = st.session_state.get("step", "A")  # A -> B -> C -> D
 # =========================
 if step == "A":
     st.markdown(
-        "这是一个聚焦 **AI 工作替代焦虑** 的自助干预系统，帮助你更清晰地识别担忧来源，"
+        "这是一个聚焦 **AI 焦虑多维度** 的自助干预系统，帮助你更清晰地识别担忧来源，"
         "并在不做职业预测的前提下，找到可执行的小行动，恢复掌控感。"
     )
     st.markdown(
@@ -251,25 +251,63 @@ elif step == "B":
     ]
     st.markdown('<hr class="divider-line">', unsafe_allow_html=True)
 
-    st.markdown("### AI工作替代焦虑评估（4题）")
+    st.markdown("### AI 焦虑多维度评估（21题）")
     st.caption("请选择最符合你当前感受的选项。")
+
+    st.markdown("**L 维度：学习焦虑（Learning）**")
+    l_items = [
+        likert("1. 学习与人工智能技术/产品相关的所有特殊功能使我感到焦虑。", "L1"),
+        likert("2. 学习使用人工智能技术/产品让我感到焦虑。", "L2"),
+        likert("3. 学习使用人工智能技术/产品的特定功能使我感到焦虑。", "L3"),
+        likert("4. 学习人工智能技术/产品的工作原理让我感到焦虑。", "L4"),
+        likert("5. 学习与人工智能技术/产品互动让我感到焦虑。", "L5"),
+        likert("6. 参加有关人工智能技术/产品发展的课程让我感到焦虑。", "L6"),
+        likert("7. 阅读人工智能技术/产品手册使我感到焦虑。", "L7"),
+        likert("8. 无法跟上与人工智能技术/产品相关的进展让我感到焦虑。", "L8"),
+    ]
+
+    st.markdown("**J 维度：工作替代担忧（Job Replacement）**")
     j_items = [
-        likert("1. 我害怕 AI 会取代人类的工作。", "J1"),
-        likert("2. 我担心 AI 会取代类似我这样的岗位。", "J2"),
-        likert("3. 我担心使用 AI 会让我依赖并削弱推理能力。", "J3"),
-        likert("4. 我担心 AI 会让人更懒、更依赖。", "J4"),
+        likert("1. 我担心人工智能技术/产品可能使我们变得依赖。", "J1"),
+        likert("2. 我担心人工智能技术/产品可能使我们变得更加懒惰。", "J2"),
+        likert("3. 我担心人工智能技术/产品可能取代人类。", "J3"),
+        likert("4. 我担心广泛使用的类人机器人会夺走人们的工作。", "J4"),
+        likert("5. 我担心如果开始使用人工智能技术/产品，我会变得依赖它们并且丧失一些推理能力。", "J5"),
+        likert("6. 我担心人工智能技术/产品会取代某人的工作。", "J6"),
+    ]
+
+    st.markdown("**S 维度：社会技术风险担忧（Sociotechnical Blindness）**")
+    s_items = [
+        likert("1. 我担心人工智能技术/产品可能被误用。", "S1"),
+        likert("2. 我担心与人工智能技术/产品相关的各种潜在问题。", "S2"),
+        likert("3. 我担心人工智能技术/产品可能失控并发生故障。", "S3"),
+        likert("4. 我担心人工智能技术/产品可能导致机器人自主性。", "S4"),
+    ]
+
+    st.markdown("**C 维度：类人AI构型恐惧（AI Configuration）**")
+    c_items = [
+        likert("1. 我觉得类人人工智能技术/产品（例如类人机器人）令人害怕。", "C1"),
+        likert("2. 我觉得类人人工智能技术/产品（例如类人机器人）令人畏惧。", "C2"),
+        likert("3. 我不知道为什么，但类人人工智能技术/产品（例如类人机器人）让我感到害怕。", "C3"),
     ]
     role = st.text_input("你的角色/职业（例如：产品经理/设计师/学生）", key="role")
 
     if st.button("继续 → 进入对话"):
        # Store assessments
         n_res = score_neuroticism(n_items)
-        j_res = score_job_anxiety(j_items)
+        l_res = score_dimension(l_items)
+        j_res = score_dimension(j_items)
+        s_res = score_dimension(s_items)
+        c_res = score_dimension(c_items)
 
         st.session_state["neuro_total"] = n_res.total
         st.session_state["neuro_band"] = n_res.band
-        st.session_state["j_total"] = j_res.total
-        st.session_state["j_intensity"] = j_res.intensity_0_10
+        st.session_state["dim_scores"] = {
+            "L": {"name": "学习焦虑", "total": l_res.total, "intensity": l_res.intensity_0_10, "count": l_res.count},
+            "J": {"name": "工作替代担忧", "total": j_res.total, "intensity": j_res.intensity_0_10, "count": j_res.count},
+            "S": {"name": "社会技术风险担忧", "total": s_res.total, "intensity": s_res.intensity_0_10, "count": s_res.count},
+            "C": {"name": "类人AI构型恐惧", "total": c_res.total, "intensity": c_res.intensity_0_10, "count": c_res.count},
+        }
 
         # IMPORTANT: "role" is controlled by the text_input widget key="role"
         # Do not assign to st.session_state["role"] here.
@@ -286,10 +324,43 @@ elif step == "C":
     st.subheader("C. 和 AI 对话")
 
     band = st.session_state["neuro_band"]
-    j0 = st.session_state["j_intensity"]
+    scores = st.session_state.get("dim_scores", {})
+
+    def band_label(intensity: int) -> str:
+        if intensity <= 3:
+            return "低"
+        if intensity <= 6:
+            return "中"
+        return "高"
+
+    st.markdown("### 多维度评估报告")
+    for key in ["L", "J", "S", "C"]:
+        item = scores.get(key, {})
+        name = item.get("name", key)
+        intensity = int(item.get("intensity", 0))
+        total = item.get("total", 0)
+        count = item.get("count", 0)
+        st.write(f"- **{name}（{key}）**：{intensity}/10（{band_label(intensity)}）｜总分 {total}/{count * 5}")
+
+    st.markdown("### 选择一个维度进入对话")
+    dim_options = {
+        "L": "学习焦虑（Learning）",
+        "J": "工作替代担忧（Job Replacement）",
+        "S": "社会技术风险担忧（Sociotechnical Blindness）",
+        "C": "类人AI构型恐惧（AI Configuration）",
+    }
+    dim_pick = st.radio(
+        "选择维度",
+        options=list(dim_options.keys()),
+        format_func=lambda k: dim_options[k],
+        key="dim_pick",
+    )
+    st.session_state["dim_pick"] = dim_pick
+
+    j0 = int(scores.get(dim_pick, {}).get("intensity", 0))
 
     st.info(
-        f"评估结果：你当前的 AI 工作替代焦虑强度为 **{j0}/10**。"
+        f"评估结果：你当前选择的维度强度为 **{j0}/10**。"
         " 数值越高表示当前焦虑体验越强烈，但这不代表结论或预测。"
     )
     st.markdown("接下来，将由聊天机器人和你沟通这种焦虑情绪。")
@@ -370,7 +441,7 @@ elif step == "C":
 
     # Optional: allow user to confirm intensity before generating plan
     if st.session_state.get("chat_done"):
-        st.markdown("#### 再次确认你当前的 AI 工作替代焦虑强度（0–10）")
+        st.markdown("#### 再次确认你当前选择维度的焦虑强度（0–10）")
         j_confirm = st.slider("J 强度", 0, 10, int(j0), key="j_confirm")
 
         if st.button("生成总结（焦虑情况 + 干预建议）"):
@@ -382,7 +453,7 @@ elif step == "C":
             st.session_state["driver"] = summary.get("driver", "value_threat")
 
             # Store confirmed intensity as baseline for this round
-            st.session_state["j_intensity_confirm"] = int(j_confirm)
+            st.session_state["dim_intensity_confirm"] = int(j_confirm)
 
             st.session_state["step"] = "D"
             st.rerun()
@@ -411,7 +482,10 @@ elif step == "D":
 
     band = st.session_state["neuro_band"]
     driver = st.session_state["driver"]
-    j_before = st.session_state.get("j_intensity_confirm", st.session_state["j_intensity"])
+    dim_pick = st.session_state.get("dim_pick", "J")
+    dim_scores = st.session_state.get("dim_scores", {})
+    dim_baseline = int(dim_scores.get(dim_pick, {}).get("intensity", 0))
+    j_before = st.session_state.get("dim_intensity_confirm", dim_baseline)
     lib = st.session_state["library"]
 
     st.write(f"个性化参数：神经质风格 **{band}** ｜担忧类型 **{driver}**")
