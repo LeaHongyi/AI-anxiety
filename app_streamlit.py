@@ -355,7 +355,6 @@ elif step == "C":
         format_func=lambda k: dim_options[k],
         key="dim_pick",
     )
-    st.session_state["dim_pick"] = dim_pick
 
     j0 = int(scores.get(dim_pick, {}).get("intensity", 0))
 
