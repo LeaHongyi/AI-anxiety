@@ -380,11 +380,11 @@ elif step == "C":
 
     llm_client = LLMClient()
     llm_mode = "Real" if llm_client.enabled() else "Mock"
-    llm_model = os.getenv("LLM_MODEL", "").strip()
+    llm_model = llm_client.model
     if llm_mode == "Real":
         st.caption(f"LLM 模式：Real（{llm_model}）")
     else:
-        st.caption("LLM 模式：Mock（未配置 LLM_* 环境变量）")
+        st.caption("LLM 模式：Mock（未配置 LLM_* 或 DEEPSEEK_*）")
 
     if st.session_state.get("llm_error"):
         st.error(f"LLM 调用失败：{st.session_state['llm_error']}")

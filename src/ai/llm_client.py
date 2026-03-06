@@ -7,17 +7,87 @@ from typing import List, Dict, Optional
 
 class LLMClient:
     def __init__(self):
-        # OpenAI-compatible endpoint
-        self.base_url = os.getenv("LLM_BASE_URL", "").rstrip("/")
+        cfg = self._load_config()
+        self.base_url = cfg["base_url"].rstrip("/")
         if self.base_url.endswith("/v1"):
             self.base_url = self.base_url[:-3]
-        self.api_key = os.getenv("LLM_API_KEY", "")
-        self.model = os.getenv("LLM_MODEL", "").strip()
+        self.api_key = cfg["api_key"]
+        self.model = cfg["model"].strip()
         self.timeout = int(os.getenv("LLM_TIMEOUT", "30"))
         self.last_error: Optional[str] = None
 
     def enabled(self) -> bool:
         return bool(self.base_url and self.api_key and self.model)
+
+    def _load_config(self) -> Dict[str, str]:
+        # Priority: standard LLM_* env -> Streamlit secrets -> DeepSeek-style env
+        base_url = os.getenv("LLM_BASE_URL", "").strip()
+        api_key = os.getenv("LLM_API_KEY", "").strip()
+        model = os.getenv("LLM_MODEL", "").strip()
+        secret_vals: Dict[str, str] = {}
+
+        if not (base_url and api_key and model):
+            secret_vals = self._load_streamlit_secrets()
+            base_url = base_url or secret_vals.get("LLM_BASE_URL", "")
+            api_key = api_key or secret_vals.get("LLM_API_KEY", "")
+            model = model or secret_vals.get("LLM_MODEL", "")
+
+        if not api_key:
+            api_key = os.getenv("DEEPSEEK_API_KEY", "").strip() or secret_vals.get("DEEPSEEK_API_KEY", "")
+        if not model:
+            model = os.getenv("DEEPSEEK_MODEL", "").strip() or secret_vals.get("DEEPSEEK_MODEL", "") or "deepseek-chat"
+        if not base_url and api_key:
+            base_url = os.getenv("DEEPSEEK_BASE_URL", "").strip() or secret_vals.get("DEEPSEEK_BASE_URL", "") or "https://api.deepseek.com"
+
+        return {
+            "base_url": base_url,
+            "api_key": api_key,
+            "model": model,
+        }
+
+    def _load_streamlit_secrets(self) -> Dict[str, str]:
+        try:
+            import streamlit as st  # lazy import to avoid hard dependency at module import time
+        except Exception:
+            return {}
+
+        try:
+            secrets_obj = st.secrets
+        except Exception:
+            return {}
+
+        out: Dict[str, str] = {}
+        keys = (
+            "LLM_BASE_URL",
+            "LLM_API_KEY",
+            "LLM_MODEL",
+            "DEEPSEEK_BASE_URL",
+            "DEEPSEEK_API_KEY",
+            "DEEPSEEK_MODEL",
+        )
+        for key in keys:
+            try:
+                val = secrets_obj.get(key, "")
+            except Exception:
+                return {}
+            if isinstance(val, str) and val.strip():
+                out[key] = val.strip()
+
+        # Also support nested style:
+        # [secrets]
+        # DEEPSEEK_API_KEY = "..."
+        try:
+            nested = secrets_obj.get("secrets", {})
+        except Exception:
+            nested = {}
+        if isinstance(nested, dict):
+            for key in keys:
+                if key in out:
+                    continue
+                val = nested.get(key, "")
+                if isinstance(val, str) and val.strip():
+                    out[key] = val.strip()
+        return out
 
     def chat(
         self,

@@ -28,9 +28,18 @@ export LLM_MODEL="your-model-name"
 export LLM_TIMEOUT="30"
 ```
 
+DeepSeek（推荐，最简）示例：
+```bash
+export DEEPSEEK_API_KEY="sk-3f805c5afcdb4b2c9d85f3dd7e6b536d"
+export DEEPSEEK_MODEL="deepseek-chat"
+# 可选：默认就是 https://api.deepseek.com
+export DEEPSEEK_BASE_URL="https://api.deepseek.com"
+```
+说明：已兼容 `DEEPSEEK_*` 变量；若仅提供 `DEEPSEEK_API_KEY`，会默认使用
+`https://api.deepseek.com` + `deepseek-chat`。
+
 Streamlit Cloud Secrets 示例（不含真实 key）：
 ```toml
-[secrets]
 LLM_BASE_URL = "https://api.example.com"
 LLM_API_KEY = "YOUR_API_KEY"
 LLM_MODEL = "your-model-name"
